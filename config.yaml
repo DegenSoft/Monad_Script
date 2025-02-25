@@ -1,6 +1,6 @@
 SETTINGS:
     # number of concurrent threads
-    THREADS: 1
+    THREADS: 10
 
     # number of retries for ANY action
     ATTEMPTS: 5
@@ -18,20 +18,20 @@ SETTINGS:
     EXACT_ACCOUNTS_TO_USE: []
 
     # pause between attempts
-    PAUSE_BETWEEN_ATTEMPTS: [5, 15]
+    PAUSE_BETWEEN_ATTEMPTS: [8, 15]
 
     # pause between swaps
-    PAUSE_BETWEEN_SWAPS: [10, 40]
+    PAUSE_BETWEEN_SWAPS: [35, 70]
 
     # pause in seconds between accounts
-    RANDOM_PAUSE_BETWEEN_ACCOUNTS: [3, 15]
+    RANDOM_PAUSE_BETWEEN_ACCOUNTS: [15, 30]
 
     # pause in seconds between actions
-    RANDOM_PAUSE_BETWEEN_ACTIONS: [3, 10]
+    RANDOM_PAUSE_BETWEEN_ACTIONS: [35, 70]
 
     # random pause before start of every account
     # to make sure that all accounts will be started at different times
-    RANDOM_INITIALIZATION_PAUSE: [5, 20]
+    RANDOM_INITIALIZATION_PAUSE: [20, 40]
 
     # pause multiplier for browser actions
     BROWSER_PAUSE_MULTIPLIER: 3
@@ -79,17 +79,21 @@ FLOW:
     # 3. collect_all_to_monad
     TASKS:
         [
-           "faucet" 
+            ["bean", "swaps", "ambient"], ["bean", "swaps", "ambient"],
+             ["apriori", "magma", "shmonad"],["accountable","owlto"],
+            ["collect_all_to_monad","swaps", "ambient", "bean"], ["apriori", "magma", "shmonad"],
+            ["collect_all_to_monad","swaps", "ambient", "bean"]
+        
         ]
 
     # number of swaps on monad.xyz
     NUMBER_OF_SWAPS: [1, 3]
 
     # percent of balance to swap on monad.xyz
-    PERCENT_OF_BALANCE_TO_SWAP: [10, 15]
+    PERCENT_OF_BALANCE_TO_SWAP: [3, 7]
 
 FAUCET:
-    MONAD_XYZ: true
+    MONAD_XYZ: false
 
     CAPSOLVER_API_KEY: "CAP-"
     PROXY_FOR_CAPTCHA: ""
@@ -102,10 +106,10 @@ DISPERSE:
 
 
 APRIORI:
-    AMOUNT_TO_STAKE: [0.0001, 0.0003]
+    AMOUNT_TO_STAKE: [0.01, 0.05]
 
 MAGMA:
-    AMOUNT_TO_STAKE: [0.0001, 0.0003]
+    AMOUNT_TO_STAKE: [0.01, 0.05]
 
 BIMA:
     LEND: true
@@ -118,10 +122,10 @@ GASZIP:
 
 SHMONAD:
     BUY_AND_STAKE_SHMON: true
-    UNSTAKE_AND_SELL_SHMON: true
+    UNSTAKE_AND_SELL_SHMON: false
 
     # percent of balance to swap on shmonad.xyz
-    PERCENT_OF_BALANCE_TO_SWAP: [2, 3]
+    PERCENT_OF_BALANCE_TO_SWAP: [5, 10]
 
 ACCOUNTABLE:
     NFT_PER_ACCOUNT_LIMIT: 3
