@@ -63,7 +63,7 @@ FLOW:
     # "owlto" - deploy contract on Owlto
 
     # REFUEL
-    # "gaszip" - gaszip refuel from arbitrum, optimism, base to monad
+    # "gaszip" - gaszip refuel from arbitrum, optimism, base, zkSync, scroll to monad
     # "orbiter" - bridge ETH from Sepolia to Monad via Orbiter
 
     # OTHER
@@ -116,7 +116,7 @@ BIMA:
     PERCENT_OF_BALANCE_TO_LEND: [20, 30]
 
 GASZIP:
-    NETWORKS_TO_REFUEL_FROM: ["Arbitrum", "Base", "Optimism"]
+    NETWORKS_TO_REFUEL_FROM: ["Arbitrum", "Base", "Optimism", "ZkSync", "Scroll"]
     AMOUNT_TO_REFUEL: [0.0001, 0.00015]
     MINIMUM_BALANCE_TO_REFUEL: 0.5
 
