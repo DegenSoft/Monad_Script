@@ -79,9 +79,7 @@ FLOW:
     # 3. collect_all_to_monad
     TASKS:
         [
-            ["bean", "swaps"],
-            "collect_all_to_monad",
-            "accountable"
+           "faucet" 
         ]
 
     # number of swaps on monad.xyz

@@ -8,7 +8,6 @@ from src.model.accountable.instance import Accountable
 from src.model.shmonad.instance import Shmonad
 from src.model.gaszip.instance import Gaszip
 from src.model.monadverse_mint.instance import MonadverseMint
-from src.model.thirdweb.instance import ThirdWeb
 from src.model.bima.instance import Bima
 from src.model.owlto.instance import Owlto
 from src.model.magma.instance import Magma
@@ -91,18 +90,6 @@ class Start:
                     if self.config.FAUCET.MONAD_XYZ:
                         await monad.faucet()
                         await self.sleep("monad_faucet")
-
-                    # if self.config.FAUCET.THIRDWEB:
-                    #     thirdweb = ThirdWeb(
-                    #         self.account_index,
-                    #         self.proxy,
-                    #         self.private_key,
-                    #         self.email,
-                    #         self.config,
-                    #         self.session,
-                    #     )
-                    #     await thirdweb.faucet()
-                    #     await self.sleep("thirdweb_faucet")
 
                 elif task == "swaps":
                     await monad.swaps(type="swaps")

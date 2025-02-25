@@ -1,13 +1,14 @@
 import asyncio
+import getpass
 import random
 
 from loguru import logger
 
+from src.degensoft import load_and_decrypt_wallets
 from src.model.disperse_from_one.instance import DisperseFromOneWallet
 from src.model.disperse_one_one.instance import DisperseOneOne
 import src.utils
 from src.utils.logs import report_error, report_success
-from src.utils.output import show_dev_info, show_logo
 import src.model
 from src.utils.statistics import print_wallets_stats
 
@@ -25,10 +26,10 @@ async def start():
                 lock,
             )
 
-    show_logo()
-    show_dev_info()
     config = src.utils.get_config()
 
+    password = getpass.getpass("Enter wallets password: ")
+      
     # Читаем все файлы
     proxies = src.utils.read_txt_file("proxies", "data/proxies.txt")
     if len(proxies) == 0:
@@ -36,23 +37,23 @@ async def start():
         return
     
     if "disperse_farm_accounts" in config.FLOW.TASKS:
-        main_keys = src.utils.read_txt_file("private keys", "data/private_keys.txt")
-        farm_keys = src.utils.read_txt_file("private keys", "data/keys_for_faucet.txt")
+        main_keys = load_and_decrypt_wallets("private keys", "data/private_keys.txt", password)
+        farm_keys = load_and_decrypt_wallets("private keys", "data/keys_for_faucet.txt",password)
         disperse_one_one = DisperseOneOne(main_keys, farm_keys, proxies, config)
         await disperse_one_one.disperse()
         return
     elif "disperse_from_one_wallet" in config.FLOW.TASKS:
-        main_keys = src.utils.read_txt_file("private keys", "data/private_keys.txt")
-        farm_keys = src.utils.read_txt_file("private keys", "data/keys_for_faucet.txt")
+        main_keys = load_and_decrypt_wallets("private keys", "data/private_keys.txt",password)
+        farm_keys = load_and_decrypt_wallets("private keys", "data/keys_for_faucet.txt", password)
         disperse_one_wallet = DisperseFromOneWallet(farm_keys[0], main_keys, proxies, config)
         await disperse_one_wallet.disperse()
         return
 
 
     if "farm_faucet" in config.FLOW.TASKS:
-        private_keys = src.utils.read_txt_file("private keys", "data/keys_for_faucet.txt")
+        private_keys = load_and_decrypt_wallets("private keys", "data/keys_for_faucet.txt",password)
     else:
-        private_keys = src.utils.read_txt_file("private keys", "data/private_keys.txt")
+        private_keys = load_and_decrypt_wallets("private keys", "data/private_keys.txt", password)
 
     # Определяем диапазон аккаунтов
     start_index = config.SETTINGS.ACCOUNTS_RANGE[0]
