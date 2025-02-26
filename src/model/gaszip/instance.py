@@ -109,8 +109,14 @@ class Gaszip:
             logger.error(f"[{self.account_index}] Error checking balances: {str(e)}")
             return None
 
-    async def get_gas_params(self, web3: AsyncWeb3) -> Dict[str, int]:
+    async def get_gas_params(self, web3: AsyncWeb3, network) -> Dict[str, int]:
         """Get gas parameters for transaction."""
+        if network == 'Scroll':
+            gasPrice = await web3.eth.gas_price
+            return {
+                "gasPrice": gasPrice
+            }
+        
         latest_block = await web3.eth.get_block('latest')
         base_fee = latest_block['baseFeePerGas']
         max_priority_fee = await web3.eth.max_priority_fee
@@ -138,7 +144,7 @@ class Gaszip:
             # Prepare transaction
             amount_wei = web3.to_wei(amount, 'ether')
             nonce = await web3.eth.get_transaction_count(self.account.address)
-            gas_params = await self.get_gas_params(web3)  # Pass web3 instance
+            gas_params = await self.get_gas_params(web3, network)  # Pass web3 instance
             
             # Estimate gas
             gas_estimate = await web3.eth.estimate_gas({
