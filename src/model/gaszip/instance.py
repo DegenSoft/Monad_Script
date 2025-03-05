@@ -133,7 +133,7 @@ class Gaszip:
                     try:
                         # Get the current gas parameters (EIP-1559 or legacy)
                         # Store these for reuse in the actual transaction
-                        gas_params = await self.get_gas_params(web3)
+                        gas_params = await self.get_gas_params(web3, network)
                         
                         # Create transaction object that would be used for bridging
                         tx = {
@@ -185,7 +185,7 @@ class Gaszip:
                                     GASZIP_RPCS[network], request_kwargs={"ssl": False}
                                 )
                             )
-                            gas_params = await self.get_gas_params(web3)
+                            gas_params = await self.get_gas_params(web3, network)
                             eligible_networks.append((network, amount_to_refuel, gas_params))
                         except Exception as e:
                             logger.error(f"[{self.account_index}] Failed to get gas params for {network}: {str(e)}")
@@ -206,8 +206,13 @@ class Gaszip:
             logger.error(f"[{self.account_index}] Error checking balances: {str(e)}")
             return None
 
-    async def get_gas_params(self, web3: AsyncWeb3) -> Dict[str, int]:
+    async def get_gas_params(self, web3: AsyncWeb3, network) -> Dict[str, int]:
         """Get gas parameters for transaction."""
+        if network == 'Scroll':
+            gasPrice = await web3.eth.gas_price
+            return {
+                "gasPrice": gasPrice
+            }
         latest_block = await web3.eth.get_block('latest')
         base_fee = latest_block['baseFeePerGas']
         max_priority_fee = await web3.eth.max_priority_fee

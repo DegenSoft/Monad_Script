@@ -2,7 +2,6 @@
 
 This tool automates interactions with the Monad testnet, including various DeFi operations and token interactions.
 
-TUTORIAL - https://star-labs.gitbook.io/star-labs/monad-eng
 
 # All features are available in config:
 # FAUCETS
@@ -68,32 +67,22 @@ TUTORIAL - https://star-labs.gitbook.io/star-labs/monad-eng
 
 ## Installation
 
-1. Clone the repository
-```bash
-git clone https://github.com/0xStarLabs/StarLabs-Monad.git
-cd StarLabs-Monad
-```
-
-2. Install dependencies
+1 Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Configure the bot by starting it (py main.py) and choosing the edit config option`
+2 Configure the bot by starting it (py main.py) and choosing the edit config option`
 ![image](https://github.com/user-attachments/assets/0d887865-049b-4804-9e11-ffc80ae21ce3)
 
 ```
 
-4. Add your data to the following files:
+3 Add your data to the following files:
 - `data/private_keys.txt` - One private key per line
 - `data/proxies.txt` - One proxy per line (format: `user:pass@ip:port`)
 
 
-5. Run the bot
+4 Run the bot
 ```bash
 python main.py
 ```
-
-## Support
-- Telegram: https://t.me/StarLabsTech
-- Chat: https://t.me/StarLabsChat

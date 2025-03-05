@@ -28,7 +28,7 @@ class ConfigUI:
         }
 
         self.root = ctk.CTk()
-        self.root.title("StarLabs Monad Configuration")
+        self.root.title("Monad Configuration")
         self.root.geometry("1250x800")
         self.root.minsize(1250, 800)  # Set minimum window size
         self.root.configure(fg_color=self.colors["bg"])
@@ -42,7 +42,7 @@ class ConfigUI:
         # Header on the left
         header = ctk.CTkLabel(
             header_frame,
-            text="🌟 StarLabs Monad Configuration",
+            text="Monad Configuration",
             font=("Helvetica", 24, "bold"),
             text_color=self.colors["accent"],
             anchor="w",
@@ -242,7 +242,7 @@ class ConfigUI:
         )
         header.pack(fill="x", pady=(20, 10), padx=5)
 
-    def create_network_checkboxes(self, parent, label, config_value):
+    def create_network_checkboxes(self, parent, label, config_value, activity= None):
         frame = ctk.CTkFrame(parent, fg_color=self.colors["frame_bg"])
         frame.pack(fill="x", pady=5)
 
@@ -260,6 +260,9 @@ class ConfigUI:
         networks_frame.pack(fill="x", padx=10, pady=5)
 
         networks = ["Arbitrum", "Base", "Optimism"]
+
+        if activity and activity == "GASZIP":
+            networks.extend(["Scroll", "ZkSync"])
         checkboxes = []
 
         for network in networks:
@@ -585,6 +588,7 @@ class ConfigUI:
             gaszip,
             "NETWORKS_TO_REFUEL_FROM",
             self.config["GASZIP"]["NETWORKS_TO_REFUEL_FROM"],
+            "GASZIP"
         )
         self.gaszip_amount_min, self.gaszip_amount_max = self.create_range_inputs(
             gaszip, "AMOUNT_TO_REFUEL", self.config["GASZIP"]["AMOUNT_TO_REFUEL"]
