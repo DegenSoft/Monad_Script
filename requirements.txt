@@ -42,7 +42,6 @@ pydantic_core==2.27.2
 pyee==12.1.1
 Pygments==2.19.1
 pytz==2025.1
-pyunormalize==16.0.0
 PyYAML==6.0.2
 questionary==2.1.0
 regex==2024.11.6
@@ -57,8 +56,8 @@ urllib3==2.3.0
 wcwidth==0.2.13
 web3==7.8.0
 websockets==13.1
-win32_setctime==1.2.0
 yarl==1.18.3
+crypto==1.4.1
 ccxt
 pynocaptcha
 curl_cffi
