@@ -1,5 +1,5 @@
 TASKS = [
-    "FULL_TASK",
+    "NFT",
 ]
 
 """
@@ -81,6 +81,24 @@ FULL_TASK = [
     ["izumi", "swaps", "ambient", "bean", "skip", "skip"],
     "logs",
 ]
+
+NFT = [
+  ["magiceden", "skip"],
+   ["magiceden", "skip"],
+   ["magiceden", "swaps", "skip", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "swaps", "skip", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+     ["magiceden", "skip"],
+]
+
 
 BRIDGE_SEPOLIA_AND_CONVERT_TO_MON = [
     "testnet_bridge",
