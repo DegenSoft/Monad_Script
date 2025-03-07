@@ -19,12 +19,13 @@ from src.utils.logs import ProgressTracker, create_progress_tracker
 
 
 async def start():
-    async def launch_wrapper(index, proxy, private_key, discord_token, twitter_token, email):
+    async def launch_wrapper(index, proxy, private_key, private_key_enc, discord_token, twitter_token, email):
         async with semaphore:
             await account_flow(
                 index,
                 proxy,
                 private_key,
+                private_key_enc,
                 discord_token,
                 twitter_token,
                 email,
@@ -102,13 +103,17 @@ async def start():
     
     if "disperse_farm_accounts" in config.FLOW.TASKS:
         main_keys = load_and_decrypt_wallets("private keys", "data/private_keys.txt", password)
+        main_keys_enc = src.utils.read_txt_file("private_keys", "data/private_keys.txt")
         farm_keys = load_and_decrypt_wallets("private keys", "data/keys_for_faucet.txt",password)
+        farm_keys_enc = src.utils.read_txt_file("keys_for_faucet", "data/keys_for_faucet.txt")
         disperse_one_one = DisperseOneOne(main_keys, farm_keys, proxies, config)
         await disperse_one_one.disperse()
         return
     elif "disperse_from_one_wallet" in config.FLOW.TASKS:
         main_keys = load_and_decrypt_wallets("private keys", "data/private_keys.txt", password)
+        main_keys_enc = src.utils.read_txt_file("private_keys", "data/private_keys.txt")
         farm_keys = load_and_decrypt_wallets("private keys", "data/keys_for_faucet.txt",password)
+        farm_keys_enc = src.utils.read_txt_file("keys_for_faucet", "data/keys_for_faucet.txt")
         disperse_one_wallet = DisperseFromOneWallet(
             farm_keys[0], main_keys, proxies, config
         )
@@ -117,8 +122,10 @@ async def start():
 
     if "farm_faucet" in config.FLOW.TASKS:
         private_keys = load_and_decrypt_wallets("private keys", "data/keys_for_faucet.txt",password)
+        private_keys_enc = src.utils.read_txt_file("keys_for_faucet", "data/keys_for_faucet.txt")
     else:
         private_keys = load_and_decrypt_wallets("private keys", "data/private_keys.txt", password)
+        private_keys_enc = src.utils.read_txt_file("private_keys", "data/private_keys.txt")
 
     if "dusted" in config.FLOW.TASKS and not config.DUSTED.SKIP_TWITTER_VERIFICATION:
         twitter_tokens = src.utils.read_txt_file("twitter tokens", "data/twitter_tokens.txt")
@@ -150,6 +157,7 @@ async def start():
             # Преобразуем номера аккаунтов в индексы (номер - 1)
             selected_indices = [i - 1 for i in config.SETTINGS.EXACT_ACCOUNTS_TO_USE]
             accounts_to_process = [private_keys[i] for i in selected_indices]
+            account_enc = [private_keys_enc[i] for i in selected_indices]
             logger.info(
                 f"Using specific accounts: {config.SETTINGS.EXACT_ACCOUNTS_TO_USE}"
             )
@@ -160,11 +168,13 @@ async def start():
         else:
             # Если список пустой, берем все аккаунты как раньше
             accounts_to_process = private_keys
+            account_enc = private_keys_enc
             start_index = 1
             end_index = len(private_keys)
     else:
         # Python slice не включает последний элемент, поэтому +1
         accounts_to_process = private_keys[start_index - 1 : end_index]
+        accounts_enc = private_keys_enc[start_index - 1 : end_index]
 
     discord_tokens = [""] * len(accounts_to_process)
     emails = [""] * len(accounts_to_process) 
@@ -205,6 +215,7 @@ async def start():
                     start_index + shuffled_idx,
                     cycled_proxies[shuffled_idx],
                     accounts_to_process[shuffled_idx],
+                    account_enc[shuffled_idx] if password != '' else None,
                     discord_tokens[shuffled_idx],
                     twitter_tokens[shuffled_idx],
                     emails[shuffled_idx],
@@ -223,6 +234,7 @@ async def account_flow(
     account_index: int,
     proxy: str,
     private_key: str,
+    private_key_enc: str | None,
     discord_token: str,
     twitter_token: str,
     email: str,
@@ -251,6 +263,11 @@ async def account_flow(
         result = await wrapper(instance.flow, config)
         if not result:
             report = True
+
+        if report:
+            await report_error(lock, private_key if private_key_enc == None else private_key_enc, proxy, discord_token)
+        else:
+            await report_success(lock, private_key if private_key_enc == None else private_key_enc, proxy, discord_token)
 
         pause = random.randint(
             config.SETTINGS.RANDOM_PAUSE_BETWEEN_ACCOUNTS[0],
