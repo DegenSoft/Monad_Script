@@ -11,10 +11,8 @@ from src.model.disperse_from_one.instance import DisperseFromOneWallet
 from src.model.balance_checker.instance import BalanceChecker
 from src.model.disperse_one_one.instance import DisperseOneOne
 import src.utils
-from src.utils.logs import report_error, report_success
 import src.model
 from src.utils.statistics import print_wallets_stats
-from src.utils.check_github_version import check_version
 from src.utils.logs import ProgressTracker, create_progress_tracker
 
 
@@ -257,18 +255,9 @@ async def account_flow(
         )
 
         result = await wrapper(instance.initialize, config)
-        if not result:
-            report = True
-
         result = await wrapper(instance.flow, config)
-        if not result:
-            report = True
-
-        if report:
-            await report_error(lock, private_key if private_key_enc == None else private_key_enc, proxy, discord_token)
-        else:
-            await report_success(lock, private_key if private_key_enc == None else private_key_enc, proxy, discord_token)
-
+        
+            
         pause = random.randint(
             config.SETTINGS.RANDOM_PAUSE_BETWEEN_ACCOUNTS[0],
             config.SETTINGS.RANDOM_PAUSE_BETWEEN_ACCOUNTS[1],
