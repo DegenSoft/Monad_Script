@@ -9,6 +9,7 @@ from src.utils.constants import TOKENS, ERC20_ABI, RPC_URL, EXPLORER_URL
 from loguru import logger
 from src.utils.client import create_client
 from src.utils.config import get_config
+from src.utils.rpc_utils import create_web3_client
 
 # Get config singleton
 config = get_config()
@@ -25,12 +26,10 @@ class MonadSwap:
             private_key: Private key for the wallet
             proxy: Optional proxy URL for API requests
         """
-        self.web3 = AsyncWeb3(
-            AsyncWeb3.AsyncHTTPProvider(
-                RPC_URL,
-                request_kwargs={"proxy": (f"http://{proxy}"), "ssl": False},
-            )
-        )
+        self.web3 = create_web3_client(
+            rpc_url=RPC_URL,
+            proxy=proxy,
+        )     
         self.account = Account.from_key(private_key)
         self.proxy = proxy
 
@@ -336,7 +335,6 @@ class MonadSwap:
                 logger.info(f"Swapping MON to {token_out}...")
                 tx_data = await self.get_swap_quote(percentage_to_swap, token_out)
                 await self.execute_transaction(tx_data)
-
         except Exception as e:
             logger.error(f"Swap failed: {str(e)}")
             raise

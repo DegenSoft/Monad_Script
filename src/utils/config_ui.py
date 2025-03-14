@@ -470,10 +470,22 @@ class ConfigUI:
             width=self.input_sizes["extra_large"],
         )
 
-        # Faucets Category
+        # FAUCET Category
         self.create_category_header(left_column, "🚰 FAUCETS")
 
         faucet = self.create_section(left_column, "FAUCET")
+        self.nocaptcha_key = self.create_single_input(
+            faucet, "NOCAPTCHA_API_KEY", self.config["FAUCET"]["NOCAPTCHA_API_KEY"]
+        )
+        self.proxy_nocaptcha = self.create_single_input(
+            faucet, "PROXY_FOR_NOCAPTCHA", self.config["FAUCET"]["PROXY_FOR_NOCAPTCHA"]
+        )
+        # Add new Cloudflare settings
+        self.use_capsolver = self.create_checkbox(
+            faucet,
+            "USE_CAPSOLVER_FOR_CLOUDFLARE",
+            self.config["FAUCET"]["USE_CAPSOLVER_FOR_CLOUDFLARE"],
+        )
         self.capsolver_key = self.create_single_input(
             faucet, "CAPSOLVER_API_KEY", self.config["FAUCET"]["CAPSOLVER_API_KEY"]
         )
@@ -483,6 +495,21 @@ class ConfigUI:
             disperse,
             "MIN_BALANCE_FOR_DISPERSE",
             self.config["DISPERSE"]["MIN_BALANCE_FOR_DISPERSE"],
+        )
+
+        # DUSTED Category
+        dusted = self.create_section(left_column, "DUSTED")
+        self.dusted_claim = self.create_checkbox(
+            dusted,
+            "CLAIM",
+            self.config["DUSTED"]["CLAIM"],
+        )
+
+        # Add the SKIP_TWITTER_VERIFICATION checkbox after the CLAIM checkbox
+        self.dusted_skip_twitter_verification = self.create_checkbox(
+            dusted,
+            "SKIP_TWITTER_VERIFICATION",
+            self.config["DUSTED"]["SKIP_TWITTER_VERIFICATION"],
         )
 
         # Swaps Category
@@ -542,6 +569,21 @@ class ConfigUI:
             self.config["MAGICEDEN"]["NFT_CONTRACTS"],
         )
 
+        # FRONT_RUNNER
+        frame_front_runner = self.create_section(right_column, "FRONT_RUNNER")
+
+        self.max_transactions_for_one_run = self.create_range_inputs(
+            frame_front_runner,
+            "MAX_AMOUNT_TRANSACTIONS_FOR_ONE_RUN:",
+            self.config["FRONT_RUNNER"]["MAX_AMOUNT_TRANSACTIONS_FOR_ONE_RUN"],
+        )
+        
+        self.pause_between_transactions = self.create_range_inputs(
+            frame_front_runner,
+            "PAUSE_BETWEEN_TRANSACTIONS:",
+            self.config["FRONT_RUNNER"]["PAUSE_BETWEEN_TRANSACTIONS"],
+        )
+
         # RIGHT COLUMN
 
         # Staking Category
@@ -551,16 +593,49 @@ class ConfigUI:
         self.apriori_stake_min, self.apriori_stake_max = self.create_range_inputs(
             apriori, "AMOUNT_TO_STAKE", self.config["APRIORI"]["AMOUNT_TO_STAKE"]
         )
+        self.apriori_stake = self.create_checkbox(
+            apriori,
+            "STAKE",
+            self.config["APRIORI"]["STAKE"],
+        )
+        self.apriori_unstake = self.create_checkbox(
+            apriori,
+            "UNSTAKE",
+            self.config["APRIORI"]["UNSTAKE"],
+        )
+
 
         magma = self.create_section(right_column, "MAGMA")
         self.magma_stake_min, self.magma_stake_max = self.create_range_inputs(
             magma, "AMOUNT_TO_STAKE", self.config["MAGMA"]["AMOUNT_TO_STAKE"]
         )
+        self.magma_stake = self.create_checkbox(
+            magma,
+            "STAKE",
+            self.config["MAGMA"]["STAKE"],
+        )
+        self.magma_unstake = self.create_checkbox(
+            magma,
+            "UNSTAKE",
+            self.config["MAGMA"]["UNSTAKE"],
+        )
+
 
         kintsu = self.create_section(right_column, "KINTSU")
         self.kintsu_stake_min, self.kintsu_stake_max = self.create_range_inputs(
             kintsu, "AMOUNT_TO_STAKE", self.config["KINTSU"]["AMOUNT_TO_STAKE"]
         )
+        self.kintsu_stake = self.create_checkbox(
+            kintsu,
+            "STAKE",
+            self.config["KINTSU"]["STAKE"],
+        )
+        self.kintsu_unstake = self.create_checkbox(
+            kintsu,
+            "UNSTAKE",
+            self.config["KINTSU"]["UNSTAKE"],
+        )
+
 
         shmonad = self.create_section(right_column, "SHMONAD")
         self.buy_stake = self.create_checkbox(
@@ -695,6 +770,21 @@ class ConfigUI:
             width=self.input_sizes["tiny"],
         )
 
+        # Add the BRIDGE_ALL checkbox
+        self.testnet_bridge_all = self.create_checkbox(
+            testnet,
+            "BRIDGE_ALL",
+            self.config["TESTNET_BRIDGE"]["BRIDGE_ALL"],
+        )
+        
+        # Add the BRIDGE_ALL_MAX_AMOUNT input
+        self.testnet_bridge_max = self.create_single_input(
+            testnet,
+            "BRIDGE_ALL_MAX_AMOUNT",
+            self.config["TESTNET_BRIDGE"]["BRIDGE_ALL_MAX_AMOUNT"],
+            width=100,
+        )
+
         orbiter = self.create_section(right_column, "ORBITER")
         self.orbiter_amount_min, self.orbiter_amount_max = self.create_range_inputs(
             orbiter, "AMOUNT_TO_BRIDGE", self.config["ORBITER"]["AMOUNT_TO_BRIDGE"]
@@ -718,7 +808,7 @@ class ConfigUI:
         # Exchange selection
         exchange_frame = ctk.CTkFrame(exchanges, fg_color=self.colors["frame_bg"])
         exchange_frame.pack(fill="x", pady=5)
-        
+
         ctk.CTkLabel(
             exchange_frame,
             text="Exchange:",
@@ -764,7 +854,7 @@ class ConfigUI:
         # Withdrawal settings
         withdrawal_frame = ctk.CTkFrame(exchanges, fg_color=self.colors["frame_bg"])
         withdrawal_frame.pack(fill="x", pady=5)
-        
+
         ctk.CTkLabel(
             withdrawal_frame,
             text="Withdrawal Settings",
@@ -788,13 +878,15 @@ class ConfigUI:
         )
 
         # Min/Max amount
-        self.withdrawal_min_amount, self.withdrawal_max_amount = self.create_range_inputs(
-            withdrawal_frame,
-            "Amount Range",
-            [
-                self.config["EXCHANGES"]["withdrawals"][0]["min_amount"],
-                self.config["EXCHANGES"]["withdrawals"][0]["max_amount"],
-            ],
+        self.withdrawal_min_amount, self.withdrawal_max_amount = (
+            self.create_range_inputs(
+                withdrawal_frame,
+                "Amount Range",
+                [
+                    self.config["EXCHANGES"]["withdrawals"][0]["min_amount"],
+                    self.config["EXCHANGES"]["withdrawals"][0]["max_amount"],
+                ],
+            )
         )
 
         # Max wallet balance
@@ -824,6 +916,45 @@ class ConfigUI:
             "Retries",
             self.config["EXCHANGES"]["withdrawals"][0]["retries"],
             width=self.input_sizes["tiny"],
+        )
+
+        # Add BIMA section
+        bima = self.create_section(right_column, "BIMA")
+        self.bima_lend = self.create_checkbox(
+            bima,
+            "LEND",
+            self.config["BIMA"]["LEND"],
+        )
+        self.bima_percent_min, self.bima_percent_max = self.create_range_inputs(
+            bima,
+            "PERCENT_OF_BALANCE_TO_LEND",
+            self.config["BIMA"]["PERCENT_OF_BALANCE_TO_LEND"],
+        )
+
+        # Add NOSTRA section
+        nostra = self.create_section(right_column, "NOSTRA")
+        self.nostra_deposit_min, self.nostra_deposit_max = self.create_range_inputs(
+            nostra, "PERCENT_OF_BALANCE_TO_DEPOSIT", self.config["NOSTRA"]["PERCENT_OF_BALANCE_TO_DEPOSIT"]
+        )
+        self.nostra_deposit = self.create_checkbox(
+            nostra,
+            "DEPOSIT",
+            self.config["NOSTRA"]["DEPOSIT"],
+        )
+        self.nostra_borrow = self.create_checkbox(
+            nostra,
+            "BORROW",
+            self.config["NOSTRA"]["BORROW"],
+        )
+        self.nostra_repay = self.create_checkbox(
+            nostra,
+            "REPAY",
+            self.config["NOSTRA"]["REPAY"],
+        )
+        self.nostra_withdraw = self.create_checkbox(
+            nostra,
+            "WITHDRAW",
+            self.config["NOSTRA"]["WITHDRAW"],
         )
 
     def _save_and_close(self):
@@ -877,6 +1008,23 @@ class ConfigUI:
         ]
         self.config["SETTINGS"]["TELEGRAM_BOT_TOKEN"] = self.telegram_token.get()
 
+
+        # FAUCET
+        self.config["FAUCET"]["NOCAPTCHA_API_KEY"] = self.nocaptcha_key.get()
+        self.config["FAUCET"]["PROXY_FOR_NOCAPTCHA"] = self.proxy_nocaptcha.get()
+        self.config["FAUCET"]["USE_CAPSOLVER_FOR_CLOUDFLARE"] = self.use_capsolver.get()
+        self.config["FAUCET"]["CAPSOLVER_API_KEY"] = self.capsolver_key.get()
+
+        # DISPERSE
+        self.config["DISPERSE"]["MIN_BALANCE_FOR_DISPERSE"] = [
+            float(self.min_balance_min.get()),
+            float(self.min_balance_max.get()),
+        ]
+        
+        # DUSTED
+        self.config["DUSTED"]["CLAIM"] = self.dusted_claim.get()
+        self.config["DUSTED"]["SKIP_TWITTER_VERIFICATION"] = self.dusted_skip_twitter_verification.get()
+
         # FLOW
         self.config["FLOW"]["NUMBER_OF_SWAPS"] = [
             int(float(self.swaps_min.get())),
@@ -887,32 +1035,30 @@ class ConfigUI:
             int(float(self.balance_swap_max.get())),
         ]
 
-        # FAUCET
-        self.config["FAUCET"]["CAPSOLVER_API_KEY"] = self.capsolver_key.get()
-
-        # DISPERSE
-        self.config["DISPERSE"]["MIN_BALANCE_FOR_DISPERSE"] = [
-            float(self.min_balance_min.get()),
-            float(self.min_balance_max.get()),
-        ]
-
         # APRIORI
         self.config["APRIORI"]["AMOUNT_TO_STAKE"] = [
             float(self.apriori_stake_min.get()),
             float(self.apriori_stake_max.get()),
         ]
+        self.config["APRIORI"]["STAKE"] = self.apriori_stake.get()
+        self.config["APRIORI"]["UNSTAKE"] = self.apriori_unstake.get()
 
         # MAGMA
         self.config["MAGMA"]["AMOUNT_TO_STAKE"] = [
             float(self.magma_stake_min.get()),
             float(self.magma_stake_max.get()),
         ]
+        self.config["MAGMA"]["STAKE"] = self.magma_stake.get()
+        self.config["MAGMA"]["UNSTAKE"] = self.magma_unstake.get()
+
 
         # KINTSU
         self.config["KINTSU"]["AMOUNT_TO_STAKE"] = [
             float(self.kintsu_stake_min.get()),
             float(self.kintsu_stake_max.get()),
         ]
+        self.config["KINTSU"]["STAKE"] = self.kintsu_stake.get()
+        self.config["KINTSU"]["UNSTAKE"] = self.kintsu_unstake.get()
 
         # GASZIP
         self.config["GASZIP"]["NETWORKS_TO_REFUEL_FROM"] = [
@@ -928,7 +1074,9 @@ class ConfigUI:
         self.config["GASZIP"]["WAIT_FOR_FUNDS_TO_ARRIVE"] = self.gaszip_wait.get()
         self.config["GASZIP"]["MAX_WAIT_TIME"] = int(self.gaszip_wait_time.get())
         self.config["GASZIP"]["BRIDGE_ALL"] = self.gaszip_bridge_all.get()
-        self.config["GASZIP"]["BRIDGE_ALL_MAX_AMOUNT"] = float(self.gaszip_bridge_max.get())
+        self.config["GASZIP"]["BRIDGE_ALL_MAX_AMOUNT"] = float(
+            self.gaszip_bridge_max.get()
+        )
 
         # MEMEBRIDGE
         self.config["MEMEBRIDGE"]["NETWORKS_TO_REFUEL_FROM"] = [
@@ -948,7 +1096,9 @@ class ConfigUI:
             self.memebridge_wait_time.get()
         )
         self.config["MEMEBRIDGE"]["BRIDGE_ALL"] = self.memebridge_bridge_all.get()
-        self.config["MEMEBRIDGE"]["BRIDGE_ALL_MAX_AMOUNT"] = float(self.memebridge_bridge_max.get())
+        self.config["MEMEBRIDGE"]["BRIDGE_ALL_MAX_AMOUNT"] = float(
+            self.memebridge_bridge_max.get()
+        )
 
         # TESTNET_BRIDGE
         self.config["TESTNET_BRIDGE"]["NETWORKS_TO_REFUEL_FROM"] = [
@@ -966,6 +1116,10 @@ class ConfigUI:
         ] = self.testnet_wait.get()
         self.config["TESTNET_BRIDGE"]["MAX_WAIT_TIME"] = int(
             self.testnet_wait_time.get()
+        )
+        self.config["TESTNET_BRIDGE"]["BRIDGE_ALL"] = self.testnet_bridge_all.get()
+        self.config["TESTNET_BRIDGE"]["BRIDGE_ALL_MAX_AMOUNT"] = float(
+            self.testnet_bridge_max.get()
         )
 
         # ACCOUNTABLE
@@ -998,6 +1152,16 @@ class ConfigUI:
             if x.strip()
         ]
 
+        # FRONT_RUNNER
+        self.config["FRONT_RUNNER"]["MAX_AMOUNT_TRANSACTIONS_FOR_ONE_RUN"] = [
+            int(self.max_transactions_for_one_run[0].get()),
+            int(self.max_transactions_for_one_run[1].get()),
+        ]
+        self.config["FRONT_RUNNER"]["PAUSE_BETWEEN_TRANSACTIONS"] = [
+            int(self.pause_between_transactions[0].get()),
+            int(self.pause_between_transactions[1].get()),
+        ]
+
         # SHMONAD
         self.config["SHMONAD"]["BUY_AND_STAKE_SHMON"] = self.buy_stake.get()
         self.config["SHMONAD"]["UNSTAKE_AND_SELL_SHMON"] = self.unstake_sell.get()
@@ -1020,79 +1184,115 @@ class ConfigUI:
         self.config["EXCHANGES"]["apiKey"] = self.exchange_api_key.get()
         self.config["EXCHANGES"]["secretKey"] = self.exchange_secret_key.get()
         self.config["EXCHANGES"]["passphrase"] = self.exchange_passphrase.get()
-        
+
         # Update withdrawals configuration
-        self.config["EXCHANGES"]["withdrawals"] = [{
-            "currency": self.withdrawal_currency.get(),
-            "networks": [
-                network for network, var in self.withdrawal_networks if var.get()
-            ],
-            "min_amount": float(self.withdrawal_min_amount.get()),
-            "max_amount": float(self.withdrawal_max_amount.get()),
-            "max_balance": float(self.withdrawal_max_balance.get()),
-            "wait_for_funds": self.withdrawal_wait.get(),
-            "max_wait_time": int(self.withdrawal_wait_time.get()),
-            "retries": int(self.withdrawal_retries.get())
-        }]
+        self.config["EXCHANGES"]["withdrawals"] = [
+            {
+                "currency": self.withdrawal_currency.get(),
+                "networks": [
+                    network for network, var in self.withdrawal_networks if var.get()
+                ],
+                "min_amount": float(self.withdrawal_min_amount.get()),
+                "max_amount": float(self.withdrawal_max_amount.get()),
+                "max_balance": float(self.withdrawal_max_balance.get()),
+                "wait_for_funds": self.withdrawal_wait.get(),
+                "max_wait_time": int(self.withdrawal_wait_time.get()),
+                "retries": int(self.withdrawal_retries.get()),
+            }
+        ]
+
+        # BIMA
+        self.config["BIMA"]["LEND"] = self.bima_lend.get()
+        self.config["BIMA"]["PERCENT_OF_BALANCE_TO_LEND"] = [
+            int(float(self.bima_percent_min.get())),
+            int(float(self.bima_percent_max.get())),
+        ]
+
+        # NOSTRA
+        self.config["NOSTRA"]["PERCENT_OF_BALANCE_TO_DEPOSIT"] = [
+            float(self.nostra_deposit_min.get()),
+            float(self.nostra_deposit_max.get()),
+        ]
+        self.config["NOSTRA"]["DEPOSIT"] = self.nostra_deposit.get()
+        self.config["NOSTRA"]["BORROW"] = self.nostra_borrow.get()
+        self.config["NOSTRA"]["REPAY"] = self.nostra_repay.get()
+        self.config["NOSTRA"]["WITHDRAW"] = self.nostra_withdraw.get()
 
         # Save to file with improved formatting
         config_path = os.path.join(os.path.dirname(__file__), "..", "..", "config.yaml")
-        
+
         # Custom YAML dumper for better formatting
         class OrderedDumper(yaml.SafeDumper):
             pass
-        
+
         def dict_representer(dumper, data):
             # For the withdrawal dictionary inside EXCHANGES, use a specific order
-            if isinstance(data, dict) and any(key in data for key in ["min_amount", "max_amount", "max_wait_time"]):
+            if isinstance(data, dict) and any(
+                key in data for key in ["min_amount", "max_amount", "max_wait_time"]
+            ):
                 # This appears to be a withdrawal configuration
                 ordered_items = []
                 # Ensure currency comes first if present
                 if "currency" in data:
                     ordered_items.append(("currency", data["currency"]))
-                
+
                 # Custom order for key withdrawal parameters
-                order_priority = ["networks", "min_amount", "max_amount", "max_balance", "wait_for_funds", "max_wait_time", "retries"]
-                
+                order_priority = [
+                    "networks",
+                    "min_amount",
+                    "max_amount",
+                    "max_balance",
+                    "wait_for_funds",
+                    "max_wait_time",
+                    "retries",
+                ]
+
                 for key in order_priority:
                     if key in data:
                         ordered_items.append((key, data[key]))
-                
+
                 # Add any remaining keys alphabetically
                 for key in sorted(data.keys()):
                     if key not in ["currency"] and key not in order_priority:
                         ordered_items.append((key, data[key]))
-                
-                return dumper.represent_mapping(yaml.resolver.Resolver.DEFAULT_MAPPING_TAG, ordered_items)
-            
+
+                return dumper.represent_mapping(
+                    yaml.resolver.Resolver.DEFAULT_MAPPING_TAG, ordered_items
+                )
+
             # For all other dictionaries, sort keys alphabetically
             return dumper.represent_mapping(
-                yaml.resolver.Resolver.DEFAULT_MAPPING_TAG,
-                sorted(data.items())
+                yaml.resolver.Resolver.DEFAULT_MAPPING_TAG, sorted(data.items())
             )
-        
+
         OrderedDumper.add_representer(dict, dict_representer)
-        
+
         with open(config_path, "w") as file:
             # Add a blank line between top-level sections
-            yaml_text = yaml.dump(self.config, Dumper=OrderedDumper, default_flow_style=False, sort_keys=False, width=80)
-            
+            yaml_text = yaml.dump(
+                self.config,
+                Dumper=OrderedDumper,
+                default_flow_style=False,
+                sort_keys=False,
+                width=80,
+            )
+
             # Insert blank lines between top-level sections for better readability
             formatted_lines = []
             prev_indent = None
-            
-            for line in yaml_text.split('\n'):
+
+            for line in yaml_text.split("\n"):
                 current_indent = len(line) - len(line.lstrip())
-                
+
                 # If this is a top-level key (no indent) and not the first line
                 if current_indent == 0 and line and prev_indent is not None:
-                    formatted_lines.append('')  # Add a blank line before new section
-                
+                    formatted_lines.append("")  # Add a blank line before new section
+
                 formatted_lines.append(line)
                 prev_indent = current_indent if line else prev_indent
-            
-            file.write('\n'.join(formatted_lines))
-            
+
+            file.write("\n".join(formatted_lines))
+
             print(f"Configuration saved to {config_path}")
 
     def run(self):
