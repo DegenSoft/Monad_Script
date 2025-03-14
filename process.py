@@ -72,7 +72,8 @@ async def start():
         proxies = src.utils.check_proxy_format(proxies)
         if proxies is False:
             return
-        private_keys = src.utils.read_txt_file("private keys", "data/private_keys.txt")
+        password = getpass.getpass("Enter wallets password: ")
+        private_keys = load_and_decrypt_wallets("private keys", "data/private_keys.txt", password)
         balance_checker = BalanceChecker(private_keys, proxies[0])
         await balance_checker.run()
         return
