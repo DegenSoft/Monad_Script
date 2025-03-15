@@ -3,9 +3,9 @@
 # --------------------------- #
 SETTINGS:
     # number of concurrent threads
-    THREADS: 1
+    THREADS: 20
     # number of retries for ANY action
-    ATTEMPTS: 3
+    ATTEMPTS: 5
     # account range.
     # BY DEFAULT: [0, 0] - all accounts
     # [3, 5] - only 3 4 5 accounts
@@ -17,63 +17,55 @@ SETTINGS:
     # Example: [1, 4, 6] - bot will use only 1, 4 and 6 accounts
     EXACT_ACCOUNTS_TO_USE: []
     # pause between attempts
-    PAUSE_BETWEEN_ATTEMPTS: [5, 15]
+    PAUSE_BETWEEN_ATTEMPTS: [8, 15]
     # pause between swaps
-    PAUSE_BETWEEN_SWAPS: [10, 40]
+    PAUSE_BETWEEN_SWAPS: [35, 70]
     # pause in seconds between accounts
-    RANDOM_PAUSE_BETWEEN_ACCOUNTS: [3, 15]
+    RANDOM_PAUSE_BETWEEN_ACCOUNTS: [30, 60]
     # pause in seconds between actions
-    RANDOM_PAUSE_BETWEEN_ACTIONS: [3, 10]
+    RANDOM_PAUSE_BETWEEN_ACTIONS: [50, 100]
     # random pause before start of every account
     # to make sure that all accounts will be started at different times
-    RANDOM_INITIALIZATION_PAUSE: [5, 30]
+    RANDOM_INITIALIZATION_PAUSE: [5, 1200]
     # pause multiplier for browser actions
     BROWSER_PAUSE_MULTIPLIER: 1.5
     # telegram settings
     TELEGRAM_BOT_TOKEN: ''
     TELEGRAM_USERS_IDS: []
-
 # --------------------------- #
 # FLOW SECTION
 # --------------------------- #
 FLOW:
     # number of swaps. bean ambient monad etc
-    NUMBER_OF_SWAPS: [1, 1]
+    NUMBER_OF_SWAPS: [1, 3]
     # percent of balance to swap
-    PERCENT_OF_BALANCE_TO_SWAP: [10, 15]
-
+    PERCENT_OF_BALANCE_TO_SWAP: [3, 7]
 # --------------------------- #
 # OTHER SECTIONS
 # --------------------------- #
 DISPERSE:
     # if balance of main account is LESS than this value
     # bot will disperse tokens from farm accounts to main account
-    MIN_BALANCE_FOR_DISPERSE: [0.4, 0.5]
-
+    MIN_BALANCE_FOR_DISPERSE: [0.2, 0.5]
 DUSTED:
     CLAIM: true  # or false to disable claiming rewards
-    SKIP_TWITTER_VERIFICATION: false
-
+    SKIP_TWITTER_VERIFICATION: true
 APRIORI:
     AMOUNT_TO_STAKE: [0.0001, 0.0003]
     STAKE: true
     UNSTAKE: true
-
 MAGMA:
     AMOUNT_TO_STAKE: [0.0001, 0.0003]
     STAKE: true
     UNSTAKE: true
-
 KINTSU:
     # MINIMUM IS 0.01 $MON
     AMOUNT_TO_STAKE: [0.01, 0.02]
     STAKE: true
     UNSTAKE: true
-
 BIMA:
     LEND: true
     PERCENT_OF_BALANCE_TO_LEND: [20.0, 30.0]
-
 GASZIP:
     NETWORKS_TO_REFUEL_FROM: ["Arbitrum", "Base", "Optimism"]
     AMOUNT_TO_REFUEL: [0.0001, 0.00015]
@@ -81,8 +73,7 @@ GASZIP:
     WAIT_FOR_FUNDS_TO_ARRIVE: true
     MAX_WAIT_TIME: 999999
     BRIDGE_ALL: false
-    BRIDGE_ALL_MAX_AMOUNT: 0.01
-
+    BRIDGE_ALL_MAX_AMOUNT: 0.0002
 MEMEBRIDGE:
     NETWORKS_TO_REFUEL_FROM: ["Arbitrum", "Base", "Optimism"]
     AMOUNT_TO_REFUEL: [0.0001, 0.00015]
@@ -90,8 +81,7 @@ MEMEBRIDGE:
     WAIT_FOR_FUNDS_TO_ARRIVE: true
     MAX_WAIT_TIME: 999999
     BRIDGE_ALL: false
-    BRIDGE_ALL_MAX_AMOUNT: 0.01
-
+    BRIDGE_ALL_MAX_AMOUNT: 0.0002
 TESTNET_BRIDGE:
     NETWORKS_TO_REFUEL_FROM: ["Arbitrum", "Optimism"]
     AMOUNT_TO_REFUEL: [0.0002, 0.0003]
@@ -100,68 +90,76 @@ TESTNET_BRIDGE:
     MAX_WAIT_TIME: 999999
     BRIDGE_ALL: false
     BRIDGE_ALL_MAX_AMOUNT: 0.01
-
 NOSTRA:
-    PERCENT_OF_BALANCE_TO_DEPOSIT: [3, 15]
+    PERCENT_OF_BALANCE_TO_DEPOSIT: [3, 7]
     DEPOSIT: true
     BORROW: true
     REPAY: true
     WITHDRAW: true
-
 SHMONAD:
     BUY_AND_STAKE_SHMON: true
     UNSTAKE_AND_SELL_SHMON: true
     # percent of balance to swap on shmonad.xyz
     PERCENT_OF_BALANCE_TO_SWAP: [2, 3]
-
 ACCOUNTABLE:
-    NFT_PER_ACCOUNT_LIMIT: 3
-
+    NFT_PER_ACCOUNT_LIMIT: 5
 ORBITER:
     AMOUNT_TO_BRIDGE: [0.1, 0.2]
     BRIDGE_ALL: true
     WAIT_FOR_FUNDS_TO_ARRIVE: true
     MAX_WAIT_TIME: 999999999
-
 LILCHOGSTARS:
     MAX_AMOUNT_FOR_EACH_ACCOUNT: [1, 3]
-
 DEMASK:
     MAX_AMOUNT_FOR_EACH_ACCOUNT: [1, 3]
-
 # monadking or monadking_unlocked
 MONADKING:
     MAX_AMOUNT_FOR_EACH_ACCOUNT: [1, 3]
-
 FRONT_RUNNER:
     MAX_AMOUNT_TRANSACTIONS_FOR_ONE_RUN: [1, 3]
     PAUSE_BETWEEN_TRANSACTIONS: [10, 30]
-
 MAGICEDEN:
     NFT_CONTRACTS: [
-        "0xb81fbb4362a586fdb3edfe261b2e1bbe73e6cd67",  # 0.01 $MON
-        "0x281df2c9178aa2dfd229771ef8f03cce90e60373",  # 0.01 $MON
-        "0x002c8fd766605b609d31cc9764e27289daf033e9",  # 0.001 $MON
-        "0x471af5eb201adc7851f4abec99ba1c78e51de0ce",  # 0.01 $MON
-        "0x63300257926af6f2a1bf2d4efb4240d8d8f250d6",  # free
-        "0xfd3b54bd826cea09d15e87f95a869ecf3e462f92",  # free
-        "0xb2ea0ff3ad4134367fb7dc75d48b3493e5a09c81",
-        "0x74e9115cfcaa5edbfc6670139c0b2a2833fc64ed",
-        "0x961f37f781350c3b0e16a75e6112f5e922a49811"
+        "0x8f9571324a98D4c78B6530C97487D34607CDf244",  
+        "0xfd3B54Bd826cea09d15e87F95A869ECF3E462f92",  
+        "0xf9c6fCD5C8eF350Df31b39e9E7308D521add1a94",  
+        "0xB2eA0ff3ad4134367FB7dc75D48b3493E5A09C81",  
+        "0xa951Bb8126d81d6Aeaf73Cc335fC7b7444dF9520",  
+        "0x690CfACdc08dC7DA79736906CD506890D6ca224A",  
+        "0xe1b02f5e2f8DcdbABb03d9D8A3B2119857a696A3",
+        "0xa8800432385590f5143D46d9BD29389a759705Ac",
+        "0x76fc8f6F357057251745F31e17C3A5eA6Ab1c605",
+        "0x70664B92a6ECD2A74920a945c058727F8b0621F2",
+        "0x0F477e01e32342a8E71A2bBf2713Df38450C7EA8",
+        "0xa5484D632428643C77fd11f9f0E570d3A6d4e3d0",
+        "0x4Bcf75E30f4Cc7C853f451EEA776efc906A09425",
+        "0xd7976AbC2D49A34B8c54a0b02008aEb747C1098D",
+        "0x87ea8dC1921d93CCEcCf1E91007bd956Cdd5b876",
+        "0x9Eb27a23F1292e66d254DAF8e5e0Cf89C451De7E",
+        "0x32E2517f37F970034db1A65CFf2A9b034790c77b",
+        "0x885bbA98C5A65828B9ca0095B73B34229e87AAEd",
+        "0x5372C0D5570Ac502fCD10A4627b6DCd784B1A7fa",
+        "0x6618a71A98b8aee927164eF96bbeE7C1aC4A3207",
+        "0x6400e85d2D2Cb6031D82EcD964747921445f66bf",
+        "0x885d0ACa22BE1cB63C57603c2ad9eaE9ca50493f",
+        "0x15846037a88275C65b0826dDdA3BbA7e89De54Db",
+        "0x3fE2D918F10506741B2091d7e99759E528c2F165",
+        "0x3e564B7f8d94E094f76a6F0a67e2Ec36b5e2f9D2",
+        "0xe969634Dd97703585f26A317Ce3184754975A803",
+        "0x6e7a9b4fa38b924719C0d8d9308Df350E345e994",
+        "0x983FbB65345dD66679B4079Daf060F80b5a4d288",
+        "0x267029397b2Eef321f8743aDf2D056239d5c08be",
+        "0x81E713aB653B194c978e072016a3E7968aF25189"
     ]
-
 FAUCET:
     # MUST HAVE
     NOCAPTCHA_API_KEY: abc
-    
     # if does not work without proxy, set proxy here
     # format: username:password@ip:port
     PROXY_FOR_NOCAPTCHA: ""
-
     # optional, but Nocaptcha still will do part of work
-    USE_CAPSOLVER_FOR_CLOUDFLARE: true
+    USE_CAPSOLVER_FOR_CLOUDFLARE: false
     CAPSOLVER_API_KEY: CAP-
-
 # --------------------------- #
 # EXCHANGES SECTION
 # --------------------------- #
