@@ -2,7 +2,7 @@ GASZIP_RPCS = {
     "Arbitrum": "https://rpc.ankr.com/arbitrum",
     "Optimism": "https://rpc.ankr.com/optimism",
     "Base": "https://rpc.ankr.com/base",
-     "ZkSync": "https://rpc.ankr.com/zksync_era",
+    "ZkSync": "https://rpc.ankr.com/zksync_era",
     "Scroll": "https://rpc.ankr.com/scroll"
 }
 

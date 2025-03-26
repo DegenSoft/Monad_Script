@@ -7,6 +7,7 @@ import os
 from loguru import logger
 
 from src.degensoft import load_and_decrypt_wallets
+from src.model.crusty_swap.instance import CrustySwap
 from src.model.disperse_from_one.instance import DisperseFromOneWallet
 from src.model.balance_checker.instance import BalanceChecker
 from src.model.disperse_one_one.instance import DisperseOneOne
@@ -90,7 +91,6 @@ async def start():
     config = src.utils.get_config()
     password = getpass.getpass("Enter wallets password: ")
 
-
     # Читаем все файлы
     proxies = src.utils.read_txt_file("proxies", "data/proxies.txt")
     if len(proxies) == 0:
@@ -133,7 +133,18 @@ async def start():
             return
     else:
         twitter_tokens = [""] * len(private_keys)
-        
+    
+    if "crusty_refuel_from_one_to_all" in config.FLOW.TASKS:
+        private_keys_to_distribute = private_keys[1:]
+        crusty_swap = CrustySwap(
+            1,
+            proxies[0],
+            private_keys[0],
+            config
+        )
+        await crusty_swap.refuel_from_one_to_all(private_keys_to_distribute)
+        return
+
     # Определяем диапазон аккаунтов
     start_index = config.SETTINGS.ACCOUNTS_RANGE[0]
     end_index = config.SETTINGS.ACCOUNTS_RANGE[1]
@@ -161,7 +172,7 @@ async def start():
     else:
         # Python slice не включает последний элемент, поэтому +1
         accounts_to_process = private_keys[start_index - 1 : end_index]
-        accounts_enc = private_keys_enc[start_index - 1 : end_index]
+        account_enc = private_keys_enc[start_index - 1 : end_index]
 
     discord_tokens = [""] * len(accounts_to_process)
     emails = [""] * len(accounts_to_process) 

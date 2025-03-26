@@ -1,10 +1,14 @@
 TASKS = [
-    "MONADVERSE",
+    "CRUSTY_SWAP",
 ]
 
-MONADVERSE = ["monadverse"]
-
 # MAGICEDEN WORKS ONLY WITH THESE NFT https://magiceden.io/mint-terminal/monad-testnet
+
+CRUSTY_SWAP = [
+    "crusty_refuel",
+    # "crusty_sell",
+    # "crusty_refuel_from_one_to_all",
+]
 
 FAUCET = [
     "faucet",
@@ -13,6 +17,9 @@ FAUCET = [
 DUSTED = [
     "dusted",
 ]
+
+GAMBLE = ["narwhal_finance"]
+
 """
 EN:
 You can create your own task with the modules you need 
@@ -47,7 +54,7 @@ TASKS = [
     "CREATE_YOUR_OWN_TASK",
 ]
 CREATE_YOUR_OWN_TASK = [
-    "memebridge",
+    "crusty_refuel",
     ("apriori", "magma", "shmonad"),
     ["ambient", "izumi", "bean"],
     "collect_all_to_monad",
@@ -62,7 +69,7 @@ BELOW ARE THE READY-MADE TASKS THAT YOU CAN USE:
 
 
 BRIDGE_AND_SWAPS = [
-    "memebridge",
+    "crusty_refuel",
     ("izumi", "ambient", "bean", "swaps"),
     "collect_all_to_monad",
 ]
@@ -131,6 +138,11 @@ EXCHANGE_AND_TESTNET_BRIDGE_TASK = [
     "collect_all_to_monad",
 ]
 
+EXCHANGE_AND_CRUSTY_SWAP_TASK = [
+    "cex_withdrawal",
+    "crusty_refuel",
+]
+
 EXCHANGE_AND_MEMEBRIDGE_TASK = [
     "cex_withdrawal",
     "memebridge",
@@ -146,24 +158,27 @@ EXCHANGE_AND_MEMEBRIDGE_TASK = [
 # "bean" - swap tokens on Bean DEX
 # "ambient" - swap tokens on Ambient DEX
 # "izumi" - swap tokens on Izumi DEX
-
 # STAKES
 # "apriori" - stake MON token
 # "magma" - stake MON token on Magma
 # "shmonad" - buy and stake shmon on shmonad.xyz | LOOK SETTINGS BELOW
 # "kintsu" - stake MON token on kintsu.xyz/
-# "nostra" - deposit, borrow, repay, withdraw 
+# "nostra" - deposit, borrow, repay, withdraw
+# "multiplifi" - stake USDC token on https://testnet.multipli.fi/?stake-tab=stake
+# "flapsh" - buy memcoin for MON on https://monad.flap.sh/board
 
 # MINT
 # "magiceden" - mint NFT on magiceden.io
 # "owlto" - deploy contract on Owlto
 # "lilchogstars" - mint NFT on testnet.lilchogstars.com/
-# "demask" - mint NFT on app.demask.finance/launchpad/0x2cdd146aa75ffa605ff7c5cc5f62d3b52c140f9c/0
 # "monadking" - mint NFT on nerzo.xyz/monadking
 # "monadking_unlocked" - mint NFT on www.nerzo.xyz/unlocked
-# "monadverse" - mint NFT on monadverse.xyz
+# "easynode_deploy" - deploy contract on easynode.xyz
+# "onchaingm_deploy" - deploy contract on onchaingm.com/deploy
+# "monai_legacy" - mint NFT on monaigg.xyz
 
 # REFUEL
+# "crusty_refuel" - refuel from arbitrum, optimism, base to monad
 # "gaszip" - gaszip refuel from arbitrum, optimism, base to monad
 # "orbiter" - bridge ETH from Sepolia to Monad via Orbiter
 # "memebridge" - memebridge refuel from arbitrum, optimism, base to monad
@@ -171,10 +186,12 @@ EXCHANGE_AND_MEMEBRIDGE_TASK = [
 # CEX WITHDRAWAL
 # "cex_withdrawal" - withdraw tokens from cex
 
-#GAMES
+# GAMES
 # "frontrunner" - play frontrunner game
 
 # OTHER
 # "logs" - show logs: MON balance | number of transactions | avarage balance | avarage number of transactions
 # "nad_domains" - register random domain on nad.domains
 # "aircraft" - mint NFT on aircraft.fun
+# "narwhal_finance" - play games on testnet.narwhal.finance/carnival
+# "monsternad_whitelist" - add to monsternad whitelist airdrop.monsternad.xyz/dashboard/

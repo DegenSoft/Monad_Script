@@ -62,3 +62,5 @@ ccxt
 pynocaptcha
 curl_cffi
 tqdm
+pandas
+openpyxl

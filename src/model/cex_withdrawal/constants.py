@@ -1,7 +1,7 @@
 CEX_WITHDRAWAL_RPCS = {
-    "Arbitrum": "https://rpc.ankr.com/arbitrum",
-    "Optimism": "https://rpc.ankr.com/optimism",
-    "Base": "https://rpc.ankr.com/base",
+    "Arbitrum": "https://arb1.lava.build",
+    "Optimism": "https://optimism.lava.build",
+    "Base": "https://base.lava.build",
 }
 
 # Network name mappings for different exchanges
@@ -12,7 +12,7 @@ NETWORK_MAPPINGS = {
         "Optimism": "OPTIMISM"
     },
     "bitget": {
-        "Arbitrum": "ARBITRUMONE",
+        "Arbitrum": "ARBONE",
         "Base": "BASE",
         "Optimism": "OPTIMISM"
     }

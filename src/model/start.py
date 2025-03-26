@@ -3,6 +3,15 @@ import primp
 import random
 import asyncio
 
+from src.model.swaps.flapsh.instance import Flapsh
+from src.model.stakings import Multiplifi
+from src.model.others.monsternad import monsternad_whitelist
+from src.model.narwhal_finance.instance import NarwhalFinance
+from src.model.deploy.onchaingm.instance import OnChainGM
+from src.model.crusty_swap.instance import CrustySwap
+from src.model.deploy.easy_node.instance import EasyNode
+from src.model.swaps.octo_swap import OctoSwap
+from src.model.nfts.monaigg_nft import Legacy
 from src.model.nostra.instance import Nostra
 from src.model.frontrunner.instance import Frontrunner
 from src.model.cex_withdrawal.instance import CexWithdraw
@@ -12,15 +21,12 @@ from src.model.dusted.instance import Dusted
 from src.model.aircraft.instance import Aircraft
 from src.model.magiceden.instance import MagicEden
 from src.model.monadking_mint.instance import Monadking
-from src.model.demask_mint.instance import Demask
 from src.model.lilchogstars_mint.instance import Lilchogstars
 from src.model.kintsu.instance import Kintsu
 from src.model.orbiter.instance import Orbiter
-from src.model.accountable.instance import Accountable
 from src.model.shmonad.instance import Shmonad
 from src.model.gaszip.instance import Gaszip
 from src.model.monadverse_mint.instance import MonadverseMint
-from src.model.bima.instance import Bima
 from src.model.owlto.instance import Owlto
 from src.model.magma.instance import Magma
 from src.model.apriori import Apriori
@@ -41,7 +47,6 @@ class Start:
         twitter_token: str,
         email: str,
         config: Config,
-
     ):
         self.account_index = account_index
         self.proxy = proxy
@@ -162,6 +167,24 @@ class Start:
             )
             await memebridge.refuel()
 
+        elif task == "crusty_refuel":
+            crusty_swap = CrustySwap(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+            )
+            await crusty_swap.refuel()
+
+        elif task == "crusty_sell":
+            crusty_swap = CrustySwap(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+            )
+            await crusty_swap.sell_monad()
+
         elif task == "apriori":
             apriori = Apriori(
                 self.account_index,
@@ -192,20 +215,6 @@ class Start:
             )
             await owlto.deploy_contract()
 
-        elif task == "bima":
-            bima = Bima(
-                self.account_index,
-                self.proxy,
-                self.private_key,
-                self.config,
-                self.session,
-            )
-            await bima.get_faucet_tokens()
-            await self.sleep("bima_faucet")
-
-            if self.config.BIMA.LEND:
-                await bima.lend()
-
         elif task == "monadverse":
             monadverse_mint = MonadverseMint(
                 self.account_index,
@@ -225,16 +234,6 @@ class Start:
                 self.session,
             )
             await shmonad.swaps()
-
-        # elif task == "accountable":
-        #     accountable = Accountable(
-        #         self.account_index,
-        #         self.proxy,
-        #         self.private_key,
-        #         self.config,
-        #         self.session,
-        #     )
-        #     await accountable.mint()
 
         elif task == "orbiter":
             orbiter = Orbiter(
@@ -289,16 +288,6 @@ class Start:
                 self.session,
             )
             await lilchogstars.mint()
-
-        elif task == "demask":
-            demask = Demask(
-                self.account_index,
-                self.proxy,
-                self.private_key,
-                self.config,
-                self.session,
-            )
-            await demask.mint()
 
         elif task == "monadking":
             monadking = Monadking(
@@ -376,6 +365,86 @@ class Start:
                 self.config,
             )
             await cex_withdrawal.withdraw()
+
+        elif task == "monai_legacy":
+            monai_legacy = Legacy(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+                self.session,
+            )
+            await monai_legacy.mint()
+
+        elif task == "octo_swap":
+            octo_swap = OctoSwap(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+                self.session,
+            )
+            await octo_swap.execute()
+
+        elif task == "easynode_deploy":
+            easynode_deploy = EasyNode(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+                self.session,
+            )
+            await easynode_deploy.deploy_contract()
+
+        elif task == "onchaingm_deploy":
+            onchaingm_deploy = OnChainGM(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+                self.session,
+            )
+            await onchaingm_deploy.deploy_contract()
+
+        elif task == "narwhal_finance":
+            narwhal_finance = NarwhalFinance(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+                self.session,
+            )
+            await narwhal_finance.faucet()
+            await narwhal_finance.gamble()
+
+        elif task == "monsternad_whitelist":
+            await monsternad_whitelist(
+                self.session,
+                self.account_index,
+                self.config,
+                self.private_key,
+            )
+        
+        elif task == "multiplifi":
+            multiplifi = Multiplifi(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+                self.session,
+            )
+            await multiplifi.faucet()
+            await multiplifi.stake()
+        
+        elif task == "flapsh":
+            flapsh = Flapsh(
+                self.account_index,
+                self.proxy,
+                self.private_key,
+                self.config,
+                self.session,
+            )
+            await flapsh.execute()
 
     async def sleep(self, task_name: str):
         """Делает рандомную паузу между действиями"""

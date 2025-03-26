@@ -22,11 +22,15 @@ class SettingsConfig:
 
 @dataclass
 class FaucetConfig:
-    NOCAPTCHA_API_KEY: str
-    PROXY_FOR_NOCAPTCHA: str
+    USE_SOLVIUM_FOR_CLOUDFLARE: bool
+    SOLVIUM_API_KEY: str
 
     USE_CAPSOLVER_FOR_CLOUDFLARE: bool
     CAPSOLVER_API_KEY: str
+
+    NOCAPTCHA_API_KEY: str
+    PROXY_FOR_NOCAPTCHA: str
+
 
 @dataclass
 class FlowConfig:
@@ -54,13 +58,6 @@ class KintsuConfig:
     AMOUNT_TO_STAKE: Tuple[float, float]
     STAKE: bool
     UNSTAKE: bool
-
-
-@dataclass
-class BimaConfig:
-    LEND: bool
-    PERCENT_OF_BALANCE_TO_LEND: Tuple[int, int]
-
 
 @dataclass
 class DustedConfig:
@@ -112,6 +109,17 @@ class MemebridgeConfig:
     BRIDGE_ALL: bool
     BRIDGE_ALL_MAX_AMOUNT: float
 
+@dataclass
+class CrustySwapConfig:
+    NETWORKS_TO_REFUEL_FROM: List[str]
+    AMOUNT_TO_REFUEL: Tuple[float, float]
+    MINIMUM_BALANCE_TO_REFUEL: float
+    WAIT_FOR_FUNDS_TO_ARRIVE: bool
+    MAX_WAIT_TIME: int
+    BRIDGE_ALL: bool
+    BRIDGE_ALL_MAX_AMOUNT: float
+    SELL_PERCENT_OF_BALANCE: Tuple[int, int]
+    SELL_MAXIMUM_AMOUNT: float
 
 @dataclass
 class TestnetBridgeConfig:
@@ -130,12 +138,6 @@ class ShmonadConfig:
     BUY_AND_STAKE_SHMON: bool
     UNSTAKE_AND_SELL_SHMON: bool
 
-
-@dataclass
-class AccountableConfig:
-    NFT_PER_ACCOUNT_LIMIT: int
-
-
 @dataclass
 class OrbiterConfig:
     AMOUNT_TO_BRIDGE: Tuple[float, float]
@@ -153,12 +155,6 @@ class DisperseConfig:
 class LilchogstarsConfig:
     MAX_AMOUNT_FOR_EACH_ACCOUNT: Tuple[int, int]
 
-
-@dataclass
-class DemaskConfig:
-    MAX_AMOUNT_FOR_EACH_ACCOUNT: Tuple[int, int]
-
-
 @dataclass
 class MonadkingConfig:
     MAX_AMOUNT_FOR_EACH_ACCOUNT: Tuple[int, int]
@@ -174,6 +170,19 @@ class FrontRunnerConfig:
 class MagicEdenConfig:
     NFT_CONTRACTS: List[str]
 
+
+@dataclass
+class MonaiyakuzaConfig:
+    MAX_PER_ACCOUNT: Tuple[int, int]
+
+
+@dataclass
+class NarwhalFinanceConfig:
+    AMOUNT_USDT_FOR_BET: Tuple[float, float]
+    NUMBER_OF_BETS_PER_START: Tuple[int, int]
+    PLAY_SLOTS: bool
+    PLAY_DICE: bool
+    PLAY_COINFLIP: bool
 
 @dataclass
 class WithdrawalConfig:
@@ -197,6 +206,16 @@ class ExchangesConfig:
 
 
 @dataclass
+class OctoSwapConfig:
+    SWAP_ALL_TO_MONAD: bool
+
+@dataclass
+class FlapshConfig:
+    AMOUNT_TO_PAY: Tuple[float, float]
+    NUMBER_OF_MEMCOINS_TO_BUY: Tuple[int, int]
+    TOKEN_ADDRESS: List[str]
+
+@dataclass
 class Config:
     SETTINGS: SettingsConfig
     EXCHANGES: ExchangesConfig
@@ -205,21 +224,23 @@ class Config:
     APRIORI: AprioriConfig
     MAGMA: MagmaConfig
     KINTSU: KintsuConfig
-    BIMA: BimaConfig
     GASZIP: GaszipConfig
     SHMONAD: ShmonadConfig
-    ACCOUNTABLE: AccountableConfig
     ORBITER: OrbiterConfig
+    OCTO_SWAP: OctoSwapConfig
     DISPERSE: DisperseConfig
     LILCHOGSTARS: LilchogstarsConfig
-    DEMASK: DemaskConfig
     MONADKING: MonadkingConfig
     FRONT_RUNNER: FrontRunnerConfig
     MAGICEDEN: MagicEdenConfig
     MEMEBRIDGE: MemebridgeConfig
+    CRUSTY_SWAP: CrustySwapConfig
     TESTNET_BRIDGE: TestnetBridgeConfig
     DUSTED: DustedConfig
     NOSTRA: NostraConfig
+    MONAIYAKUZA: MonaiyakuzaConfig
+    NARWHAL_FINANCE: NarwhalFinanceConfig
+    FLAPSH: FlapshConfig
     WALLETS: WalletsConfig = field(default_factory=WalletsConfig)
     lock: asyncio.Lock = field(default_factory=asyncio.Lock)
 
@@ -308,6 +329,8 @@ class Config:
                 PROXY_FOR_NOCAPTCHA=data["FAUCET"]["PROXY_FOR_NOCAPTCHA"],
                 USE_CAPSOLVER_FOR_CLOUDFLARE=data["FAUCET"]["USE_CAPSOLVER_FOR_CLOUDFLARE"],
                 CAPSOLVER_API_KEY=data["FAUCET"]["CAPSOLVER_API_KEY"],
+                USE_SOLVIUM_FOR_CLOUDFLARE=data["FAUCET"]["USE_SOLVIUM_FOR_CLOUDFLARE"],
+                SOLVIUM_API_KEY=data["FAUCET"]["SOLVIUM_API_KEY"],
             ),
             FLOW=FlowConfig(
                 TASKS=tasks_list,
@@ -330,12 +353,6 @@ class Config:
                 AMOUNT_TO_STAKE=tuple(data["KINTSU"]["AMOUNT_TO_STAKE"]),
                 STAKE=data["KINTSU"]["STAKE"],
                 UNSTAKE=data["KINTSU"]["UNSTAKE"],
-            ),
-            BIMA=BimaConfig(
-                LEND=data["BIMA"]["LEND"],
-                PERCENT_OF_BALANCE_TO_LEND=tuple(
-                    data["BIMA"]["PERCENT_OF_BALANCE_TO_LEND"]
-                ),
             ),
             DUSTED=DustedConfig(
                 CLAIM=data["DUSTED"]["CLAIM"],
@@ -368,6 +385,18 @@ class Config:
                 BRIDGE_ALL=data["MEMEBRIDGE"]["BRIDGE_ALL"],
                 BRIDGE_ALL_MAX_AMOUNT=data["MEMEBRIDGE"]["BRIDGE_ALL_MAX_AMOUNT"],
             ),
+            CRUSTY_SWAP=CrustySwapConfig(
+                NETWORKS_TO_REFUEL_FROM=data["CRUSTY_SWAP"]["NETWORKS_TO_REFUEL_FROM"],
+                AMOUNT_TO_REFUEL=tuple(data["CRUSTY_SWAP"]["AMOUNT_TO_REFUEL"]),
+                MINIMUM_BALANCE_TO_REFUEL=data["CRUSTY_SWAP"]["MINIMUM_BALANCE_TO_REFUEL"],
+                WAIT_FOR_FUNDS_TO_ARRIVE=data["CRUSTY_SWAP"]["WAIT_FOR_FUNDS_TO_ARRIVE"],
+                MAX_WAIT_TIME=data["CRUSTY_SWAP"]["MAX_WAIT_TIME"],
+                BRIDGE_ALL=data["CRUSTY_SWAP"]["BRIDGE_ALL"],
+                BRIDGE_ALL_MAX_AMOUNT=data["CRUSTY_SWAP"]["BRIDGE_ALL_MAX_AMOUNT"],
+                SELL_PERCENT_OF_BALANCE=tuple(data["CRUSTY_SWAP"]["SELL_PERCENT_OF_BALANCE"]),
+                SELL_MAXIMUM_AMOUNT=data["CRUSTY_SWAP"]["SELL_MAXIMUM_AMOUNT"],
+            ),
+            
             TESTNET_BRIDGE=TestnetBridgeConfig(
                 NETWORKS_TO_REFUEL_FROM=data["TESTNET_BRIDGE"][
                     "NETWORKS_TO_REFUEL_FROM"
@@ -390,9 +419,6 @@ class Config:
                 BUY_AND_STAKE_SHMON=data["SHMONAD"]["BUY_AND_STAKE_SHMON"],
                 UNSTAKE_AND_SELL_SHMON=data["SHMONAD"]["UNSTAKE_AND_SELL_SHMON"],
             ),
-            ACCOUNTABLE=AccountableConfig(
-                NFT_PER_ACCOUNT_LIMIT=data["ACCOUNTABLE"]["NFT_PER_ACCOUNT_LIMIT"],
-            ),
             ORBITER=OrbiterConfig(
                 AMOUNT_TO_BRIDGE=tuple(data["ORBITER"]["AMOUNT_TO_BRIDGE"]),
                 BRIDGE_ALL=data["ORBITER"]["BRIDGE_ALL"],
@@ -407,11 +433,6 @@ class Config:
             LILCHOGSTARS=LilchogstarsConfig(
                 MAX_AMOUNT_FOR_EACH_ACCOUNT=tuple(
                     data["LILCHOGSTARS"]["MAX_AMOUNT_FOR_EACH_ACCOUNT"]
-                ),
-            ),
-            DEMASK=DemaskConfig(
-                MAX_AMOUNT_FOR_EACH_ACCOUNT=tuple(
-                    data["DEMASK"]["MAX_AMOUNT_FOR_EACH_ACCOUNT"]
                 ),
             ),
             MONADKING=MonadkingConfig(
@@ -429,6 +450,24 @@ class Config:
             ),
             MAGICEDEN=MagicEdenConfig(
                 NFT_CONTRACTS=data["MAGICEDEN"]["NFT_CONTRACTS"],
+            ),
+            MONAIYAKUZA=MonaiyakuzaConfig(
+                MAX_PER_ACCOUNT=tuple(data["MONAIYAKUZA"]["MAX_PER_ACCOUNT"]),
+            ),
+            OCTO_SWAP=OctoSwapConfig(
+                SWAP_ALL_TO_MONAD=data["OCTO_SWAP"]["SWAP_ALL_TO_MONAD"],
+            ),
+            NARWHAL_FINANCE=NarwhalFinanceConfig(
+                AMOUNT_USDT_FOR_BET=tuple(data["NARWHAL_FINANCE"]["AMOUNT_USDT_FOR_BET"]),
+                NUMBER_OF_BETS_PER_START=tuple(data["NARWHAL_FINANCE"]["NUMBER_OF_BETS_PER_START"]),
+                PLAY_SLOTS=data["NARWHAL_FINANCE"]["PLAY_SLOTS"],
+                PLAY_DICE=data["NARWHAL_FINANCE"]["PLAY_DICE"],
+                PLAY_COINFLIP=data["NARWHAL_FINANCE"]["PLAY_COINFLIP"],
+            ),
+            FLAPSH=FlapshConfig(
+                AMOUNT_TO_PAY=tuple(data["FLAPSH"]["AMOUNT_TO_PAY"]),
+                NUMBER_OF_MEMCOINS_TO_BUY=tuple(data["FLAPSH"]["NUMBER_OF_MEMCOINS_TO_BUY"]),
+                TOKEN_ADDRESS=data["FLAPSH"]["TOKEN_ADDRESS"],
             ),
         )
 
