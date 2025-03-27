@@ -140,13 +140,6 @@ class ConfigUI:
         if "OCTO_SWAP" not in self.config:
             self.config["OCTO_SWAP"] = {"SWAP_ALL_TO_MONAD": False}
 
-        if "FLAPSH" not in self.config:
-            self.config["FLAPSH"] = {
-                "AMOUNT_TO_PAY": [0.0001, 0.0003],
-                "NUMBER_OF_MEMCOINS_TO_BUY": [1, 3],
-                "TOKEN_ADDRESS": []
-            }
-
     def create_range_inputs(self, parent, label, config_value, width=120):
         frame = ctk.CTkFrame(parent, fg_color=self.colors["frame_bg"])
         frame.pack(fill="x", pady=5)
@@ -265,7 +258,7 @@ class ConfigUI:
         )
         header.pack(fill="x", pady=(20, 10), padx=5)
 
-    def create_network_checkboxes(self, parent, label, config_value, activity= None):
+    def create_network_checkboxes(self, parent, label, config_value, activity= None, available_networks= None):
         frame = ctk.CTkFrame(parent, fg_color=self.colors["frame_bg"])
         frame.pack(fill="x", pady=5)
 
@@ -282,7 +275,7 @@ class ConfigUI:
         networks_frame = ctk.CTkFrame(frame, fg_color=self.colors["frame_bg"])
         networks_frame.pack(fill="x", padx=10, pady=5)
 
-        networks = ["Arbitrum", "Base", "Optimism"]
+        networks = available_networks or ["Arbitrum", "Base", "Optimism"]
 
         if activity and activity == "GASZIP":
             networks.extend(["Scroll", "ZkSync"])
