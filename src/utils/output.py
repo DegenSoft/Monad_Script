@@ -1,3 +1,4 @@
+from typing import List
 from prompt_toolkit.styles import Style
 import questionary
 from questionary import Style as QuestionaryStyle

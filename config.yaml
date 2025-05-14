@@ -39,7 +39,7 @@ FLOW:
     # number of swaps. bean ambient monad etc
     NUMBER_OF_SWAPS: [1, 3]
     # percent of balance to swap
-    PERCENT_OF_BALANCE_TO_SWAP: [10, 15]
+    PERCENT_OF_BALANCE_TO_SWAP: [3, 7]
 
 # --------------------------- #
 # OTHER SECTIONS
