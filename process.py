@@ -1,10 +1,12 @@
 import asyncio
 import random
+import getpass
 import subprocess
 import os
 import getpass
 from loguru import logger
 
+from src.degensoft import load_and_decrypt_wallets
 from src.model.crusty_swap.instance import CrustySwap
 from src.degensoft import load_and_decrypt_wallets
 from src.model.disperse_from_one.instance import DisperseFromOneWallet
@@ -144,7 +146,6 @@ async def start():
         )
         await crusty_swap.refuel_from_one_to_all(private_keys_to_distribute)
         return
-
 
     # Определяем диапазон аккаунтов
     start_index = config.SETTINGS.ACCOUNTS_RANGE[0]

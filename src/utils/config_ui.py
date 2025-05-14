@@ -29,6 +29,7 @@ class ConfigUI:
 
         self.root = ctk.CTk()
         self.root.title("Monad Configuration")
+        self.root.title("Monad Configuration")
         self.root.geometry("1250x800")
         self.root.minsize(1250, 800)  # Set minimum window size
         self.root.configure(fg_color=self.colors["bg"])
